@@ -15,13 +15,14 @@ function Maze(width, height) {
 	this.endY = null;//ending co-ordinates
 
 	//Array containing maze spaces
+	this.directions = ["north","east","south","west"];
 	this.spaces = [];
 
 	var x,y;
 	for(x = 1; x < width; x += 1) {
 		this.spaces[x] = [];
 		for(y = 1; y <= height; y += 1) {
-			this.spaces[x][y] = "(" + x + "," + y + ")"; //Text representation of co-ordinates for columns in each row
+			this.spaces[x][y] = new MazeSpace();//New MazeSpace object for each column
 		}
 	}
 }
@@ -38,4 +39,14 @@ Maze.prototype.setStart = function(x, y, orientation) {
 Maze.prototype.setEnd = function(x, y) {
 	this.endX = x;
 	this.endY = y;
+}
+
+//SetWall method for maze
+Maze.prototype.setWall = function(x, y, direction) {
+	//Check if assigned properties are within bounds of maze
+	if(x > 0 && x <= this.width && y > 0 && y <= this.height && this.directions.indexOf(direction) !== -1){
+		this.spaces[x][y].setWall(direction);
+		return true; //successful
+	}
+	return false;//not in bound - so don't set bound
 }
