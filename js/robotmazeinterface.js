@@ -39,13 +39,13 @@ RobotMazeInterface.prototype.canMove = function (x, y, direction) {
     return false
   }
 
-  /*if (this.maze.spaces[x][y][direction]) {
+  if (this.maze.spaces[x][y][direction]) {
     return false
   }
 
   if (this.maze.spaces[forwardX][forwardY][forwardDirection]) {
     return false
-  }*/
+  }
 
   return true
 }

@@ -15,14 +15,14 @@ function Maze(width, height) {
 	this.endY = null;//ending co-ordinates
 
 	//Array containing maze spaces
-	this.directions = ["north","east","south","west"];
+	this.directions = ["north","east","south","west"]; //DRY keep directions at one place
 	this.spaces = [];
 
 	var x,y;
-	for(x = 1; x < width; x += 1) {
+	for(x = 1; x <= width; x += 1) {
 		this.spaces[x] = [];
 		for(y = 1; y <= height; y += 1) {
-			this.spaces[x][y] = new MazeSpace();//New MazeSpace object for each column
+			this.spaces[x][y] = new MazeSpace(this.directions);//New MazeSpace object for each column
 		}
 	}
 }
@@ -30,23 +30,41 @@ function Maze(width, height) {
 //Create method in JS object by adding a function to its prototype property (Note that JS does not have classes)
 //Setter methods for validation before setting property to check if properties are in bounds of maze
 Maze.prototype.setStart = function(x, y, orientation) {
-	this.startX = x;
-	this.startY = y;
-	this.startOrientation = orientation; //Update the Maze properties
+	if(this.isInBounds(x , y) && this.isValidDirection(orientation)){
+		this.startX = x;
+		this.startY = y;
+		this.startOrientation = orientation; //Update the Maze properties
+		return true;
+	}
+	return false;
 }
 
 //Exit point method
 Maze.prototype.setEnd = function(x, y) {
+	if(!(this.isInBounds(x , y))){
+		return false;
+	}
 	this.endX = x;
 	this.endY = y;
+	return true;
 }
 
 //SetWall method for maze
 Maze.prototype.setWall = function(x, y, direction) {
 	//Check if assigned properties are within bounds of maze
-	if(x > 0 && x <= this.width && y > 0 && y <= this.height && this.directions.indexOf(direction) !== -1){
+	if(this.isInBounds(x , y) && this.isValidDirection(direction)){
 		this.spaces[x][y].setWall(direction);
 		return true; //successful
 	}
 	return false;//not in bound - so don't set bound
+}
+
+//Valid direction check method
+Maze.prototype.isValidDirection = function(direction) {
+	return this.directions.indexOf(direction) !== -1
+}
+
+//Inbounds check method
+Maze.prototype.isInBounds = function(x , y) {
+	return x > 0 && x <= this.width && y > 0 && y <= this.height;
 }
