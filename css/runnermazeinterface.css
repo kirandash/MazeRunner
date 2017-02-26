@@ -32,7 +32,7 @@
     width: 2em;
     color: #AAA;
 }
-.maze .mazeRow .mazeSpace i.robot {
+.maze .mazeRow .mazeSpace i.runner {
     color: #292929;
 }
 
@@ -43,7 +43,7 @@ div.actions {
     display: inline-block;
     vertical-align: top;
 }
-div.actions i.robot {
+div.actions i.runner {
   display: block;
   text-align: center;
   font-size: 3em;

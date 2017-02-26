@@ -1,11 +1,11 @@
-function RobotMazeInterface(robot,maze,selector
+function RunnerMazeInterface(runner,maze,selector
   ) {
-  this.robot = robot;
+  this.runner = runner;
   this.maze  = maze;
   this.selector = selector;
 }
 
-RobotMazeInterface.prototype.canMove = function (x, y, direction) {
+RunnerMazeInterface.prototype.canMove = function (x, y, direction) {
   var forwardX, forwardY, forwardDirection;
 
   if (["north","east","south","west"].indexOf(direction) === -1) {
@@ -50,11 +50,11 @@ RobotMazeInterface.prototype.canMove = function (x, y, direction) {
   return true
 }
 
-RobotMazeInterface.prototype.render = function () {
+RunnerMazeInterface.prototype.render = function () {
   $(this.selector).empty().append(this.renderMaze(), this.renderControls());
 };
 
-RobotMazeInterface.prototype.renderMaze = function () {
+RunnerMazeInterface.prototype.renderMaze = function () {
   var $maze = $("<div class='maze'>");
   var $mazeRow, $mazeSpace;
   for (var y=this.maze.height; y >= 1; y -=1 ){
@@ -72,13 +72,13 @@ RobotMazeInterface.prototype.renderMaze = function () {
   return $maze;
 }
 
-RobotMazeInterface.prototype.renderSpace = function (x,y) {
-  var isRobot = false;
+RunnerMazeInterface.prototype.renderSpace = function (x,y) {
+  var isrunner = false;
   var isStart = false;
   var isEnd = false;
 
-  if (this.robot !== null && this.robot.x == x && this.robot.y == y) {
-      isRobot = true;
+  if (this.runner !== null && this.runner.x == x && this.runner.y == y) {
+      isrunner = true;
   }
   if (this.maze.endX == x && this.maze.endY == y) {
       isEnd = true;
@@ -87,27 +87,27 @@ RobotMazeInterface.prototype.renderSpace = function (x,y) {
       isStart = true;
   }
 
-  if (!isRobot && !isStart && !isEnd) {
+  if (!isrunner && !isStart && !isEnd) {
     return "";
   }
 
   var icons = {
     start: "icon-screenshot",
     end: "icon-remove-circle",
-    northRobot: "icon-arrow-up",
-    eastRobot: "icon-arrow-right",
-    southRobot: "icon-arrow-down",
-    westRobot: "icon-arrow-left",
-    northRobotStart: "icon-circle-arrow-up",
-    eastRobotStart: "icon-circle-arrow-right",
-    southRobotStart: "icon-circle-arrow-down",
-    westRobotStart: "icon-circle-arrow-left",
-    robotEnd: "icon-ok-sign "
+    northrunner: "icon-arrow-up",
+    eastrunner: "icon-arrow-right",
+    southrunner: "icon-arrow-down",
+    westrunner: "icon-arrow-left",
+    northrunnerStart: "icon-circle-arrow-up",
+    eastrunnerStart: "icon-circle-arrow-right",
+    southrunnerStart: "icon-circle-arrow-down",
+    westrunnerStart: "icon-circle-arrow-left",
+    runnerEnd: "icon-ok-sign "
   }  
   var $space = $('<i>');
 
-  if (isRobot) {
-    $space.addClass("robot");
+  if (isrunner) {
+    $space.addClass("runner");
   }
   if (isStart) {
     $space.addClass("start");
@@ -116,12 +116,12 @@ RobotMazeInterface.prototype.renderSpace = function (x,y) {
     $space.addClass("end");
   }
 
-  if (isRobot && isEnd) {
-    $space.addClass(icons["robotEnd"]);    
-  } else if (isRobot && isStart) {
-    $space.addClass(icons[this.robot.orientation + "RobotStart"]);
-  } else if (isRobot) {
-    $space.addClass(icons[this.robot.orientation + "Robot"]);
+  if (isrunner && isEnd) {
+    $space.addClass(icons["runnerEnd"]);    
+  } else if (isrunner && isStart) {
+    $space.addClass(icons[this.runner.orientation + "runnerStart"]);
+  } else if (isrunner) {
+    $space.addClass(icons[this.runner.orientation + "runner"]);
   } else if (isEnd) {
     $space.addClass(icons["end"]);        
   } else if (isStart)  {
@@ -132,52 +132,52 @@ RobotMazeInterface.prototype.renderSpace = function (x,y) {
 
 }
 
-RobotMazeInterface.prototype.renderControls = function () {
+RunnerMazeInterface.prototype.renderControls = function () {
   var interface = this;
-  if (interface.robot === null) return false;
+  if (interface.runner === null) return false;
   var $actions = $("<div class='actions'>");
   
 
   var buttons = {};
-  if(typeof interface.robot.turnLeft == 'function') { 
+  if(typeof interface.runner.turnLeft == 'function') { 
     buttons["Turn Left"] = function () {
-        interface.robot.turnLeft();
+        interface.runner.turnLeft();
         interface.render();
       };
   }
-  if(typeof interface.robot.turnRight == 'function') { 
+  if(typeof interface.runner.turnRight == 'function') { 
     buttons["Turn Right"] = function () {
-        interface.robot.turnRight();
+        interface.runner.turnRight();
         interface.render();
       };
   }
-  if(typeof interface.robot.moveForward == 'function') {   
+  if(typeof interface.runner.moveForward == 'function') {   
   buttons["Move Forward"] = function () {
-      interface.robot.moveForward();
+      interface.runner.moveForward();
       interface.render();
     };
   }
-  if(typeof interface.robot.canMoveForward == 'function') {   
+  if(typeof interface.runner.canMoveForward == 'function') {   
     buttons["Can Move Forward?"] = function () {
-        if (interface.robot.canMoveForward()) {
+        if (interface.runner.canMoveForward()) {
             alert("Yes!");
         } else {
             alert ("No.");
         }
       };
   }
-  if(typeof interface.robot.setMaze == 'function') {   
+  if(typeof interface.runner.setMaze == 'function') {   
     buttons["Place in Maze"] = function () {
-        interface.robot.setMaze(interface.maze);
+        interface.runner.setMaze(interface.maze);
         interface.render();
       };
   }
-  if(typeof interface.robot.exitMaze == 'function') {   
+  if(typeof interface.runner.exitMaze == 'function') {   
     buttons["Exit Maze"] = function () {    
-        if (interface.robot.maze == interface.maze) {
+        if (interface.runner.maze == interface.maze) {
           (function callExitMaze(){
               setTimeout(function() {
-                  result = interface.robot.exitMaze(1);
+                  result = interface.runner.exitMaze(1);
                   interface.render();
                   if (result === false) {
                       callExitMaze();
@@ -198,8 +198,8 @@ RobotMazeInterface.prototype.renderControls = function () {
     }
   }
 
-  if (this.robot.maze != this.maze) {
-    $robot = $('<i class="robot icon-user"></i>').appendTo($actions);
+  if (this.runner.maze != this.maze) {
+    $runner = $('<i class="runner icon-user"></i>').appendTo($actions);
   }  
 
   return $actions;
